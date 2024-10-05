@@ -45,6 +45,7 @@ class EditImages:
 
         # Save the resized image in its original format
         resized_image.save(output_image_path, original_format)
+        return self.resize_image(resized_image, 700, 700)
 
     def change_type(self, image=None, type_img='JPEG'):
         if image is None:
@@ -53,23 +54,27 @@ class EditImages:
         os.makedirs(path, exist_ok=True)
         output_file_path = os.path.join(path, f"Changed.{type_img.lower()}")
         image.save(output_file_path, format=type_img)
+        return self.resize_image(image,700,700)
 
     def add_logo(self, image, logo_path, coordinates):
         if image is None:
             image = self.placeholder_img
 
-        path = os.path.join(self.path, "LogoText")
+        # Define the path for saving the image
+        path = os.path.join(self.path, "LogoText", "Added_Logo")
 
+        # Create the directories if they don't exist (including nested directories)
         os.makedirs(path, exist_ok=True)
 
+        # Get the original format of the image
         original_format = image.format
         logo = Image.open(logo_path)
         if logo.mode != 'RGBA':
             logo = logo.convert('RGBA')
         image.paste(logo, coordinates, logo)  # Use the logo itself as the mask for transparency
-        output_file_path = os.path.join(path,
-                                        f"Added_Logo/Text.{original_format.lower()}")
+        output_file_path = os.path.join(path, f"Text.{original_format.lower()}")
         image.save(output_file_path, format=original_format)
+        return self.resize_image(image, 700, 700)
 
     def add_label(self, image, text, coordinates, font_size=200, font_color='red'):
         if image is None:
@@ -91,6 +96,7 @@ class EditImages:
         # Save the modified image
         output_file_path = os.path.join(path, f"Added_Logo/Text.{image.format.lower()}")
         image.save(output_file_path)
+        return self.resize_image(image, 700, 700)
 
     def get_placeholder_image(self):
         return self.placeholder_img_tk

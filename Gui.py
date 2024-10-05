@@ -63,14 +63,14 @@ class GUI:
 
     from tkinter import simpledialog, messagebox
 
-    def show_popup(self, selection):
+    def show_popup(self, selection, update_display_image):
         self.set_selected_option(selection)
-
         if self.selection == "Resize":
             width = simpledialog.askinteger("Input", "Enter width:", parent=self.root, minvalue=1)
             height = simpledialog.askinteger("Input", "Enter height:", parent=self.root, minvalue=1)
             if width is not None and height is not None:
-                self.edit.resize_image_final(self.current_image, width, height)
+                resized_image = self.edit.resize_image_final(self.current_image, width, height)
+                update_display_image(resized_image)  # Pass the image with its dimensions
             else:
                 messagebox.showinfo("Cancelled", "Resize operation was cancelled.")
 
@@ -79,22 +79,27 @@ class GUI:
                                               filetypes=[("Image Files", "*.png;*.jpg;*.jpeg;*.gif")])
 
             label_text = simpledialog.askstring("Input", "Enter label text (or leave empty if none):", parent=self.root)
+            modified_image = self.current_image  # Start with the current image
+
             if logo:
                 logo_x = simpledialog.askinteger("Input", "Enter X coordinate for logo position:", parent=self.root,
                                                  minvalue=0)
                 logo_y = simpledialog.askinteger("Input", "Enter Y coordinate for logo position:", parent=self.root,
                                                  minvalue=0)
                 if logo_x is not None and logo_y is not None:
-                    self.edit.add_logo(self.current_image, logo, (logo_x, logo_y))
+                    modified_image = self.edit.add_logo(modified_image, logo, (logo_x, logo_y))
+
             if label_text:
                 label_x = simpledialog.askinteger("Input", "Enter X coordinate for label position:", parent=self.root,
                                                   minvalue=0)
-
                 label_y = simpledialog.askinteger("Input", "Enter Y coordinate for label position:", parent=self.root,
                                                   minvalue=0)
                 if label_x is not None and label_y is not None:
-                    self.edit.add_label(self.current_image, label_text, (label_x, label_y))
-            if not logo and not label_text:
+                    modified_image = self.edit.add_label(modified_image, label_text, (label_x, label_y))
+
+            if logo or label_text:  # Check if at least one was added
+                update_display_image(modified_image)  # Update displayed image
+            else:
                 messagebox.showinfo("Cancelled", "No logo or label was added.")
 
         elif self.selection == "Change type":
