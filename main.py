@@ -17,7 +17,7 @@ def upload_image():
         img = Image.open(file_path)  # Open the image
         img_width, img_height = img.size  # Store the original dimensions
         gui.set_current_image(img)
-        img = edit.resize_image(img, 700, 700)  # Resize the image to fit within 700px, maintaining aspect ratio
+        img = img.resize(700,400)  # Resize the image to fit within 700px, maintaining aspect ratio
         img_tk = ImageTk.PhotoImage(img)  # Convert the image to PhotoImage for display in Tkinter
         image_label.config(image=img_tk)
         image_label.image = img_tk  # Keep a reference to avoid garbage collection
@@ -27,16 +27,12 @@ def upload_image():
         size_label.config(text=f"Image Dimensions: {img_width} x {img_height}")
 
 
-def update_display_image(image):
-    # Convert the modified image to PhotoImage and display it
+def update_display_image(image,size):
     img_tk = ImageTk.PhotoImage(image)
     image_label.config(image=img_tk)
     image_label.image = img_tk  # Keep a reference to avoid garbage collection
     image_label.pack(pady=10, padx=10, anchor='center')
-
-    # Get and display the current dimensions of the image
-    current_width, current_height = image.size
-    size_label.config(text=f"Current Dimensions: {current_width} x {current_height}")
+    size_label.config(text=f"Current Dimensions: {size[0]} x {size[1]}")
 
 
 # Create the welcome label
