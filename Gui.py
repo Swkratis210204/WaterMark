@@ -61,6 +61,9 @@ class GUI:
     def set_current_image(self, image):
         self.current_image = image
 
+    def get_current_image(self):
+        return self.current_image
+
     def show_popup(self, selection, update_display_image):
         self.set_selected_option(selection)
         if self.selection == "Resize":
@@ -68,7 +71,8 @@ class GUI:
             height = simpledialog.askinteger("Input", "Enter height:", parent=self.root, minvalue=1)
             if width is not None and height is not None:
                 resized_image = self.edit.resize_image_final(self.current_image, width, height)
-                update_display_image(resized_image[0],resized_image[1])  # Pass the image with its dimensions
+                update_display_image(resized_image[0],resized_image[1])
+                messagebox.showinfo("Completed", "Resized image is in the folder Resized")
             else:
                 messagebox.showinfo("Cancelled", "Resize operation was cancelled.")
 
@@ -96,7 +100,8 @@ class GUI:
                     modified_image = self.edit.add_label(modified_image, label_text, (label_x, label_y))
 
             if logo or label_text:  # Check if at least one was added
-                update_display_image(modified_image[0],modified_image[1])  # Update displayed image
+                update_display_image(modified_image[0],modified_image[1])
+                messagebox.showinfo("Completed", "Image was succesfully saved in the LogoText folder")# Update displayed image
             else:
                 messagebox.showinfo("Cancelled", "No logo or label was added.")
 
@@ -104,5 +109,6 @@ class GUI:
             type_img = simpledialog.askstring("Input", "Enter type (e.g., JPEG, PNG):", parent=self.root)
             if type_img is not None:
                 self.edit.change_type(self.current_image, type_img)
+                messagebox.showinfo("Completed", "Type of image was succesfully saved in the ChangedType folder")
         else:
             messagebox.showinfo("Unknown Option", "Please select a valid option.")

@@ -17,7 +17,7 @@ def upload_image():
         img = Image.open(file_path)  # Open the image
         img_width, img_height = img.size  # Store the original dimensions
         gui.set_current_image(img)
-        img = img.resize(700,400)  # Resize the image to fit within 700px, maintaining aspect ratio
+        img = img.resize((700, 400), Image.LANCZOS)
         img_tk = ImageTk.PhotoImage(img)  # Convert the image to PhotoImage for display in Tkinter
         image_label.config(image=img_tk)
         image_label.image = img_tk  # Keep a reference to avoid garbage collection
